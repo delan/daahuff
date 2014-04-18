@@ -28,13 +28,13 @@ namespace Asgn
         private void btnCompress_Click(object sender, RoutedEventArgs e)
         {
             byte[] input = Encoding.UTF8.GetBytes(txtPlain.Text);
-            txtCompressed.Text = Base64.encode(input, Base64.RFC2045);
+            txtCompressed.Text = Base64.encode(input, Base64.Hannes);
         }
 
         private void btnDecompress_Click(object sender, RoutedEventArgs e)
         {
             string input = txtCompressed.Text;
-            txtPlain.Text = Encoding.UTF8.GetString(Base64.decode(input, Base64.RFC2045));
+            txtPlain.Text = Encoding.UTF8.GetString(Base64.decode(input, Base64.Hannes));
         }
     }
 }
