@@ -28,7 +28,11 @@ namespace Asgn
                 inverse[map[i]] = i;
         }
     }
-    class Base64
+
+    /// <summary>
+    /// Base64 static methods encode() and decode() plus common flavours.
+    /// </summary>
+    static class Base64
     {
         /// <summary>
         /// Standard Base64 as used by MIME and defined in RFC 2045, for testing.
@@ -55,50 +59,35 @@ namespace Asgn
         public static string encode(byte[] input, Base64Style style)
         {
             int n = input.Length;
-            int six; // six output bits
+            int symbol; // six output bits
             // simple estimate, wastes 4 chars in the worst case
             StringBuilder output = new StringBuilder(4 + n * 4 / 3);
-            // walk 3 input bytes at a time
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < n; i++) // walk 3 input bytes at a time
             {
-                // top 6 bits of octet 0 go to symbol 0
-                six = input[i] >> 2;
-                // we have symbol 0
-                output.Append(style.map[six]);
-                // bottom 2 bits of octet 0 go to symbol 1
-                six = (input[i] & 3) << 4;
-                // are we out of octets?
-                if (++i == n)
+                symbol = input[i] >> 2;                 // octet 0 [7..2] -> symbol 0 [5..0]
+                output.Append(style.map[symbol]);       // symbol 0 complete
+                symbol = (input[i] & 3) << 4;           // octet 0 [1..0] -> symbol 1 [5..4]
+                if (++i == n)                           // are we out of octets?
                 {
-                    // we have symbol 1
-                    output.Append(style.map[six]);
+                    output.Append(style.map[symbol]);   // symbol 1 complete
                     break;
                 }
-                // top 4 bits of octet 1 go to symbol 1
-                six |= input[i] >> 4;
-                // we have symbol 1
-                output.Append(style.map[six]);
-                // bottom 4 bits of octet 1 go to symbol 2
-                six = (input[i] & 15) << 2;
-                // are we out of octets?
-                if (++i == n)
+                symbol |= input[i] >> 4;                // octet 1 [7..4] -> symbol 1 [3..0]
+                output.Append(style.map[symbol]);       // symbol 1 complete
+                symbol = (input[i] & 15) << 2;          // octet 1 [3..0] -> symbol 2 [5..2]
+                if (++i == n)                           // are we out of octets?
                 {
-                    // we have symbol 2
-                    output.Append(style.map[six]);
+                    output.Append(style.map[symbol]);   // symbol 2 complete
                     break;
                 }
-                // top 2 bits of octet 2 go to symbol 2
-                six |= input[i] >> 6;
-                // we have symbol 2
-                output.Append(style.map[six]);
-                // bottom 6 bits of octet 2 go to symbol 3
-                six = input[i] & 63;
-                // we have symbol 3
-                output.Append(style.map[six]);
+                symbol |= input[i] >> 6;                // octet 2 [7..6] -> symbol 2 [1..0]
+                output.Append(style.map[symbol]);       // symbol 2 complete
+                symbol = input[i] & 63;                 // octet 2 [5..0] -> symbol 3 [5..0]
+                output.Append(style.map[symbol]);       // symbol 3 complete
             }
-            // add padding bytes if the style requires it
             if (null != style.padding)
             {
+                // add padding bytes if the style requires it
                 int count = (3 - n % 3) % 3;
                 string pad = new String((char)style.padding, count);
                 output.Append(pad);
@@ -117,55 +106,41 @@ namespace Asgn
         {
             int n = input.Length;
             int octet; // eight output bits
-            // simple generous estimate
-            // may need to be truncated if padding or invalid input bytes exist
+            // simple estimate, needs to be truncated if any octets are padding or invalid
             byte[] output = new byte[n * 3 / 4];
-            int i = -1; // input symbol index
-            int j = 0; // output byte index
+            int i = -1; // input index
+            int j = 0; // output index
             while (true)
             {
-                // find the next valid symbol
                 while (++i < n)
                     if (style.inverse.ContainsKey(input[i]))
                         break;
                 if (i == n)
                     break;
-                // contribute the top 6 bits of octet 0
-                octet = style.inverse[input[i]] << 2;
-                // find the next valid symbol
+                octet = style.inverse[input[i]] << 2;           // symbol 0 [5..0] -> octet 0 [7..2]
                 while (++i < n)
                     if (style.inverse.ContainsKey(input[i]))
                         break;
                 if (i == n)
                     break;
-                // contribute the bottom 2 bits of octet 0
-                octet |= style.inverse[input[i]] >> 4;
-                // octet 0 complete
-                output[j++] = (byte)octet;
-                // contribute the top 4 bits of octet 1
-                octet = (style.inverse[input[i]] & 15) << 4;
-                // find the next valid symbol
+                octet |= style.inverse[input[i]] >> 4;          // symbol 1 [5..4] -> octet 0 [1..0]
+                output[j++] = (byte)octet;                      // octet 0 complete
+                octet = (style.inverse[input[i]] & 15) << 4;    // symbol 1 [3..0] -> octet 1 [7..4]
                 while (++i < n)
                     if (style.inverse.ContainsKey(input[i]))
                         break;
                 if (i == n)
                     break;
-                // contribute the bottom 4 bits of octet 1
-                octet |= style.inverse[input[i]] >> 2;
-                // octet 1 complete
-                output[j++] = (byte)octet;
-                // contribute the top 2 bits of octet 2
-                octet = (style.inverse[input[i]] & 3) << 6;
-                // find the next valid symbol
+                octet |= style.inverse[input[i]] >> 2;          // symbol 2 [5..2] -> octet 1 [3..0]
+                output[j++] = (byte)octet;                      // octet 1 complete
+                octet = (style.inverse[input[i]] & 3) << 6;     // symbol 2 [1..0] -> octet 2 [7..6]
                 while (++i < n)
                     if (style.inverse.ContainsKey(input[i]))
                         break;
                 if (i == n)
                     break;
-                // contribute the bottom 6 bits of octet 2
-                octet |= style.inverse[input[i]];
-                // octet 2 complete
-                output[j++] = (byte)octet;
+                octet |= style.inverse[input[i]];               // symbol 3 [5..0] -> octet 2 [5..0]
+                output[j++] = (byte)octet;                      // octet 2 complete
             }
             // truncate the output byte array to the actual number of octets
             Array.Resize(ref output, j);
