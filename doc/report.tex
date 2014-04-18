@@ -1,0 +1,112 @@
+\documentclass[a4paper,titlepage,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage[usenames,dvipsnames]{color}
+\hypersetup{
+	colorlinks,
+	pdfauthor=Delan Azabani,
+	pdftitle=Design and Analysis of Algorithms 300: Huffman assignment
+}
+\lstset{basicstyle=\ttfamily, basewidth=0.5em}
+
+\title{Design and Analysis of Algorithms 300\\Huffman assignment}
+\date{April 19, 2014}
+\author{Delan Azabani}
+
+\begin{document}
+
+\maketitle
+
+\section{Design considerations regarding data types}
+
+One of my goals when completing this assignment was to ensure that the core
+Huffman and Base64 algorithms only ever interact with sequences of octets
+(\texttt{byte[]}). Beyond making them agnostic of text encodings, this would
+allow them to be used with other data which may not necessarily be textual.
+
+Of course, the implementation still needed to conform to the specification, and
+behave as expected when tested with copied textual input. This led to the need
+to make careful decisions as to where and how the interactions between strings
+and octets are made.
+
+The .NET Framework defines \texttt{System.Char} as a `UTF-16 code unit', which
+is obviously not an octet. Since the release of Unicode 2.0 in 1996 however,
+these 16-bit values no longer necessarily represent entire Unicode code points
+either. For instance:
+
+\begin{tabular}{|lllll|}
+	\hline
+	Glyph &
+		Unicode code point &
+		UTF-32 &
+		UTF-16 \texttt{char} &
+		UTF-8 \\\hline
+	\raisebox{-3pt}{
+		\includegraphics[height=12pt]{U+000041.png}
+	} &
+		\texttt{U+000041} &
+		\texttt{00000041} &
+		\texttt{0041} &
+		\texttt{41} \\\hline
+	\raisebox{-3pt}{
+		\includegraphics[height=12pt]{U+0000A9.png}
+	} &
+		\texttt{U+0000A9} &
+		\texttt{000000A9} &
+		\texttt{00A9} &
+		\texttt{C2 A9} \\\hline
+	\raisebox{-3pt}{
+		\includegraphics[height=12pt]{U+002202.png}
+	} &
+		\texttt{U+002202} &
+		\texttt{00002202} &
+		\texttt{2202} &
+		\texttt{E2 88 82} \\\hline
+	\raisebox{-3pt}{
+		\includegraphics[height=12pt]{U+01F530.png}
+	} &
+		\texttt{U+01F530} &
+		\texttt{0001F530} &
+		\texttt{D83D DD30} &
+		\texttt{F0 9F 94 B0} \\\hline
+\end{tabular}
+
+The code units in the UTF-16 and UTF-32 encodings need to have a defined
+\emph{endianness} when serialised into a sequence of octets. To avoid this, I
+chose UTF-8 as the internal representation of any text where possible, only
+using \texttt{string} and \texttt{char} when dealing with the UI. UTF-8 also
+provides the unique benefit of backwards compatibility with ASCII.
+
+This raises an interesting problem, even though I implemented § 2.2 of the
+assignment, where frequency tables with arbitrary-length symbols are
+\emph{accepted}. For example, I would accept a frequency table with a symbol
+consisting of the octets \texttt{F0 9F 94 B0}.
+
+How would I \emph{generate} a useful frequency table for text, if all I am
+dealing with are sequences of octets? The approach used for binary data would
+yield four separate entries for the character \includegraphics[height=12pt]
+{U+01F530.png} --- \texttt{F0}, \texttt{9F}, \texttt{94} and \texttt{B0}, which
+is clearly a poor result. My solution, albeit inelegant, was to write two
+frequency table generators:
+
+\begin{itemize}
+	\item
+		one which deals purely in octets, for binary data
+	\item
+		one which is aware that the octets are a UTF-8 sequence
+\end{itemize}
+
+This is still better than a naïve approach where all of the algorithms use
+\texttt{char} values. Combining such a configuration with a character like
+\includegraphics[height=12pt]{U+01F530.png} would lead to disastrous results.
+While \texttt{D83D} and \texttt{DD30} are not valid characters, they would
+receive separate entries in the frequency table, causing the table to fail to
+correctly display in the UI.
+
+\end{document}
