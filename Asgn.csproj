@@ -66,12 +66,14 @@
     <Compile Include="Base64.cs" />
     <Compile Include="DAABitArray.cs" />
     <Compile Include="FrequencyTable.cs" />
+    <Compile Include="HuffmanTree.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MinHeap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
