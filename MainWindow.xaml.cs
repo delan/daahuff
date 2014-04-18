@@ -24,6 +24,11 @@ namespace Asgn
         {
             InitializeComponent();
         }
-    
+
+        private void btnCompress_Click(object sender, RoutedEventArgs e)
+        {
+            byte[] input = Encoding.UTF8.GetBytes(txtPlain.Text);
+            txtCompressed.Text = Base64.encode(input, Base64.RFC2045);
+        }
     }
 }

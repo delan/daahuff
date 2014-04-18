@@ -10,7 +10,7 @@
         <Label Content="Plain Text:" Height="28" HorizontalAlignment="Left" Margin="16,10,0,0" Name="lblPlain" VerticalAlignment="Top" />
         <Label Content="Symbol Table:" Height="28" HorizontalAlignment="Right" Margin="0,10,102,0" Name="label1" VerticalAlignment="Top" />
         <Button Content="_Freq Calc" Height="23" HorizontalAlignment="Right" Margin="0,0,174,31" Name="btnFreq" VerticalAlignment="Bottom" Width="75" />
-        <Button Content="_Compress" Height="23" HorizontalAlignment="Right" Margin="0,0,93,31" Name="btnCompress" VerticalAlignment="Bottom" Width="75" />
+        <Button Content="_Compress" Height="23" HorizontalAlignment="Right" Margin="0,0,93,31" Name="btnCompress" VerticalAlignment="Bottom" Width="75" Click="btnCompress_Click" />
         <Button Content="_Decompress" Height="23" HorizontalAlignment="Right" Margin="0,0,12,31" Name="btnDecompress" VerticalAlignment="Bottom" Width="75" />
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
