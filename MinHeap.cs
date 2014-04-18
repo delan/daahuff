@@ -12,6 +12,14 @@ namespace Asgn
     {
         List<T> data = new List<T>();
 
+        public int length
+        {
+            get
+            {
+                return data.Count;
+            }
+        }
+
         public static int parent(int i)
         {
             return (i - 1) / 2;
