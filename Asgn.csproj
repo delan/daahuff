@@ -64,8 +64,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Base64.cs" />
-    <Compile Include="DAABitArray.cs" />
+    <Compile Include="BitArray.cs" />
     <Compile Include="FrequencyTable.cs" />
+    <Compile Include="HuffmanEncoder.cs" />
     <Compile Include="HuffmanTree.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
