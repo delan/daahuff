@@ -67,7 +67,7 @@
     <Compile Include="BitArray.cs" />
     <Compile Include="ByteArrayComparer.cs" />
     <Compile Include="FrequencyTable.cs" />
-    <Compile Include="HuffmanEncoder.cs" />
+    <Compile Include="HuffmanTranscoder.cs" />
     <Compile Include="HuffmanTree.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

@@ -23,5 +23,30 @@ namespace Asgn
             }
             return output.octets();
         }
+        public static byte[] inflateBinaryData(byte[] input, FrequencyTable table)
+        {
+            BitArray bits = new BitArray(input);
+            List<byte> output = new List<byte>();
+            HuffmanTree tree = new HuffmanTree(table);
+            HuffmanTreeNode node = tree.head;
+            for (int i = 0; i < bits.length; i++)
+            {
+                if (bits[i] == false && node.left != null)
+                {
+                    node = node.left;
+                }
+                else if (bits[i] == true && node.right != null)
+                {
+                    node = node.right;
+                }
+                else
+                {
+                    foreach (byte octet in node.symbol)
+                        output.Add(octet);
+                    node = tree.head;
+                }
+            }
+            return output.ToArray();
+        }
     }
 }

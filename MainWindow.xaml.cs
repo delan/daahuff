@@ -28,15 +28,19 @@ namespace Asgn
         private void btnCompress_Click(object sender, RoutedEventArgs e)
         {
             FrequencyTable table = new FrequencyTable();
-            byte[] input = Encoding.UTF8.GetBytes(txtPlain.Text);
             table.loadUIString(txtFreqTbl.Text);
+            byte[] input = Encoding.UTF8.GetBytes(txtPlain.Text);
             byte[] output = HuffmanTranscoder.deflateBinaryData(input, table);
             txtCompressed.Text = Base64.encode(output, Base64.Hannes);
         }
 
         private void btnDecompress_Click(object sender, RoutedEventArgs e)
         {
-            //
+            FrequencyTable table = new FrequencyTable();
+            table.loadUIString(txtFreqTbl.Text);
+            byte[] input = Base64.decode(txtCompressed.Text, Base64.Hannes);
+            byte[] output = HuffmanTranscoder.inflateBinaryData(input, table);
+            txtPlain.Text = Encoding.UTF8.GetString(output);
         }
 
         private void btnFreq_Click(object sender, RoutedEventArgs e)

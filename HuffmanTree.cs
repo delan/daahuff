@@ -6,13 +6,14 @@ using System.Text;
 namespace Asgn
 {
     /// <summary>
-    /// Class representing a generic node in a Huffman tree.
-    /// This class must be inherited from, not instantiated.
+    /// Class representing a node of any kind in a Huffman tree.
     /// </summary>
-    abstract class HuffmanTreeNode : IComparable<HuffmanTreeNode>
+    class HuffmanTreeNode : IComparable<HuffmanTreeNode>
     {
         public double frequency;
-        public HuffmanTreeInternalNode parent;
+        public byte[] symbol;
+        public BitArray sequence = new BitArray();
+        public HuffmanTreeNode parent, left, right;
 
         public int CompareTo(HuffmanTreeNode other)
         {
@@ -26,29 +27,12 @@ namespace Asgn
     }
 
     /// <summary>
-    /// Class representing a leaf node in a Huffman tree.
-    /// </summary>
-    class HuffmanTreeLeafNode : HuffmanTreeNode
-    {
-        public byte[] symbol;
-        public BitArray sequence = new BitArray();
-    }
-
-    /// <summary>
-    /// Class representing an internal node in a Huffman tree.
-    /// </summary>
-    class HuffmanTreeInternalNode : HuffmanTreeNode
-    {
-        public HuffmanTreeNode left, right;
-    }
-
-    /// <summary>
     /// Class representing a Huffman tree.
     /// </summary>
     class HuffmanTree
     {
         public HuffmanTreeNode head;
-        public List<HuffmanTreeLeafNode> leaves = new List<HuffmanTreeLeafNode>();
+        public List<HuffmanTreeNode> leaves = new List<HuffmanTreeNode>();
 
         MinHeap<HuffmanTreeNode> pq = new MinHeap<HuffmanTreeNode>();
 
@@ -57,7 +41,7 @@ namespace Asgn
             // first insert all leaf nodes into the min-heap
             foreach (var pair in table.freq)
             {
-                HuffmanTreeLeafNode node = new HuffmanTreeLeafNode() {
+                HuffmanTreeNode node = new HuffmanTreeNode() {
                     frequency = pair.Value,
                     symbol = pair.Key
                 };
@@ -67,7 +51,7 @@ namespace Asgn
             // then insert (n - 1) internal nodes
             for (int i = 0; i < pq.length; i++)
             {
-                HuffmanTreeInternalNode node = new HuffmanTreeInternalNode();
+                HuffmanTreeNode node = new HuffmanTreeNode();
                 node.left = pq.remove();
                 node.right = pq.remove();
                 node.frequency = node.left.frequency + node.right.frequency;
@@ -76,7 +60,7 @@ namespace Asgn
                 pq.insert(node);
             }
             // precalculate the bit sequences for each symbol
-            foreach (HuffmanTreeLeafNode leaf in leaves)
+            foreach (HuffmanTreeNode leaf in leaves)
             {
                 HuffmanTreeNode node = leaf;
                 while (node.parent != null)

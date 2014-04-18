@@ -20,9 +20,34 @@ namespace Asgn
             }
         }
 
+        public BitArray()
+        {
+            // nothing to see here
+        }
+
+        public BitArray(byte[] input)
+        {
+            for (int i = 0; i < input.Length; i++)
+            {
+                add(    input[i] >> 7);
+                add(1 & input[i] >> 6);
+                add(1 & input[i] >> 5);
+                add(1 & input[i] >> 4);
+                add(1 & input[i] >> 3);
+                add(1 & input[i] >> 2);
+                add(1 & input[i] >> 1);
+                add(1 & input[i]     );
+            }
+        }
+
         public void add(bool value)
         {
             data.Add(value);
+        }
+
+        public void add(int value)
+        {
+            data.Add(value != 0 ? true : false);
         }
 
         public void append(BitArray other)
