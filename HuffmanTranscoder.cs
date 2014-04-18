@@ -8,7 +8,7 @@ namespace Asgn
     /// <summary>
     /// Static class containing Huffman (de)compression methods.
     /// </summary>
-    static class HuffmanEncoder
+    static class HuffmanTranscoder
     {
         public static byte[] deflateBinaryData(byte[] input, FrequencyTable table)
         {

@@ -30,7 +30,7 @@ namespace Asgn
             FrequencyTable table = new FrequencyTable();
             byte[] input = Encoding.UTF8.GetBytes(txtPlain.Text);
             table.loadUIString(txtFreqTbl.Text);
-            byte[] output = HuffmanEncoder.deflateBinaryData(input, table);
+            byte[] output = HuffmanTranscoder.deflateBinaryData(input, table);
             txtCompressed.Text = Base64.encode(output, Base64.Hannes);
         }
 
