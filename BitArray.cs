@@ -36,6 +36,26 @@ namespace Asgn
             data.Reverse();
         }
 
+        public byte[] octets()
+        {
+            List<byte> output = new List<byte>();
+            byte next = 0; // next octet to output
+            int j = 7; // bit index in next (LSB 0)
+            for (int i = 0; i < length; i++)
+            {
+                next |= (byte)((data[i] ? 1 : 0) << j);
+                if (--j < 0)
+                {
+                    output.Add(next);
+                    next = 0;
+                    j = 7;
+                }
+            }
+            if (j >= 0)
+                output.Add(next);
+            return output.ToArray();
+        }
+
         public bool this[int i]
         {
             get

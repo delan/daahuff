@@ -14,7 +14,7 @@ namespace Asgn
         {
             BitArray output = new BitArray();
             HuffmanTree tree = new HuffmanTree(table);
-            return null;
+            return output.octets();
         }
     }
 }
