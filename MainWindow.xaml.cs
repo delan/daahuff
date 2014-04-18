@@ -36,5 +36,13 @@ namespace Asgn
             string input = txtCompressed.Text;
             txtPlain.Text = Encoding.UTF8.GetString(Base64.decode(input, Base64.Hannes));
         }
+
+        private void btnFreq_Click(object sender, RoutedEventArgs e)
+        {
+            FrequencyTable table = new FrequencyTable();
+            byte[] input = Encoding.UTF8.GetBytes(txtPlain.Text);
+            table.generateFromUTF8(input);
+            txtFreqTbl.Text = table.ToString();
+        }
     }
 }
