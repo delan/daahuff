@@ -31,6 +31,7 @@ namespace Asgn
     class HuffmanTreeLeafNode : HuffmanTreeNode
     {
         public byte[] symbol;
+        public BitArray sequence = new BitArray();
     }
 
     /// <summary>
@@ -46,10 +47,10 @@ namespace Asgn
     /// </summary>
     class HuffmanTree
     {
-        HuffmanTreeNode head;
+        public HuffmanTreeNode head;
+        public List<HuffmanTreeLeafNode> leaves = new List<HuffmanTreeLeafNode>();
 
         MinHeap<HuffmanTreeNode> pq = new MinHeap<HuffmanTreeNode>();
-        List<HuffmanTreeLeafNode> leaves = new List<HuffmanTreeLeafNode>();
 
         public HuffmanTree(FrequencyTable table)
         {
@@ -73,6 +74,19 @@ namespace Asgn
                 node.left.parent = node;
                 node.right.parent = node;
                 pq.insert(node);
+            }
+            // precalculate the bit sequences for each symbol
+            foreach (HuffmanTreeLeafNode leaf in leaves)
+            {
+                HuffmanTreeNode node = leaf;
+                while (node.parent != null)
+                {
+                    if (node == node.parent.left)
+                        leaf.sequence.add(false);
+                    if (node == node.parent.right)
+                        leaf.sequence.add(true);
+                    node = node.parent;
+                }
             }
             // now the min node is the root of the tree
             head = pq.remove();
