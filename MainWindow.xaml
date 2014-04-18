@@ -14,9 +14,7 @@
         <Button Content="_Decompress" Height="23" HorizontalAlignment="Right" Margin="0,0,12,31" Name="btnDecompress" VerticalAlignment="Bottom" Width="75" Click="btnDecompress_Click" />
         <Grid.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="White" Offset="0" />
                 <GradientStop Color="SteelBlue" Offset="1" />
-                <GradientStop Color="Black" Offset="0.705" />
             </LinearGradientBrush>
         </Grid.Background>
     </Grid>
