@@ -113,6 +113,37 @@ namespace Asgn
         }
 
         /// <summary>
+        /// Load frequency information from a string in the UI format.
+        /// </summary>
+        public void loadUIString(string input)
+        {
+            freq.Clear();
+            string[] lines = input.Split(new char[] { '\n', '\r' });
+            foreach (string line in lines)
+            {
+                double weight = double.NaN;
+                string[] tokens = line.Split(':');
+                string text = string.Join(":", tokens, 0, tokens.Length - 1);
+                if (text.Length == 0)
+                    continue;
+                try
+                {
+                    weight = double.Parse(tokens[tokens.Length - 1]);
+                    // now for the actual frequency stuff
+                    byte[] symbol = Encoding.UTF8.GetBytes(text);
+                    if (freq.ContainsKey(symbol))
+                        freq[symbol] += weight;
+                    else
+                        freq[symbol] = weight;
+                }
+                catch (FormatException e)
+                {
+                    // probably an empty line
+                }
+            }
+        }
+
+        /// <summary>
         /// Returns a string representation suitable for UI use.
         /// Assumes that each symbol is a UTF-8 octet sequence.
         /// </summary>
