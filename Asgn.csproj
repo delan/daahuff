@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="Base64.cs" />
     <Compile Include="BitArray.cs" />
+    <Compile Include="ByteArrayComparer.cs" />
     <Compile Include="FrequencyTable.cs" />
     <Compile Include="HuffmanEncoder.cs" />
     <Compile Include="HuffmanTree.cs" />

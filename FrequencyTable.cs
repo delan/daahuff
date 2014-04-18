@@ -6,27 +6,6 @@ using System.Text;
 namespace Asgn
 {
     /// <summary>
-    /// Class that allows byte[] to be compared as a Dictionary key.
-    /// </summary>
-    public class ByteArrayComparer : IEqualityComparer<byte[]>
-    {
-        public int GetHashCode(byte[] key)
-        {
-            if (key == null)
-                throw new ArgumentNullException("key");
-            return key.Sum(b => b);
-        }
-        public bool Equals(byte[] left, byte[] right)
-        {
-            if (left == null || right == null)
-            {
-                return left == right;
-            }
-            return left.SequenceEqual(right);
-        }
-    }
-
-    /// <summary>
     /// Class representing a Huffman symbol frequency table.
     /// </summary>
     class FrequencyTable
