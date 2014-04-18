@@ -40,42 +40,53 @@ is obviously not an octet. Since the release of Unicode 2.0 in 1996 however,
 these 16-bit values no longer necessarily represent entire Unicode code points
 either. For instance:
 
-\begin{tabular}{|lllll|}
-	\hline
-	Glyph &
-		Unicode code point &
-		UTF-32 &
-		UTF-16 \texttt{char} &
-		UTF-8 \\\hline
-	\raisebox{-3pt}{
-		\includegraphics[height=12pt]{U+000041.png}
-	} &
-		\texttt{U+000041} &
-		\texttt{00000041} &
-		\texttt{0041} &
-		\texttt{41} \\\hline
-	\raisebox{-3pt}{
-		\includegraphics[height=12pt]{U+0000A9.png}
-	} &
-		\texttt{U+0000A9} &
-		\texttt{000000A9} &
-		\texttt{00A9} &
-		\texttt{C2 A9} \\\hline
-	\raisebox{-3pt}{
-		\includegraphics[height=12pt]{U+002202.png}
-	} &
-		\texttt{U+002202} &
-		\texttt{00002202} &
-		\texttt{2202} &
-		\texttt{E2 88 82} \\\hline
-	\raisebox{-3pt}{
-		\includegraphics[height=12pt]{U+01F530.png}
-	} &
-		\texttt{U+01F530} &
-		\texttt{0001F530} &
-		\texttt{D83D DD30} &
-		\texttt{F0 9F 94 B0} \\\hline
-\end{tabular}
+\begin{center}
+\begin{figure}[h]
+	\begin{center}
+	\begin{tabular}{|lllll|}
+		\hline
+		Glyph &
+			Unicode code point &
+			UTF-32 &
+			UTF-16 \texttt{char} &
+			UTF-8 \\\hline
+		\raisebox{-3pt}{
+			\includegraphics[height=12pt]{U+000041.png}
+		} &
+			\texttt{U+000041} &
+			\texttt{00000041} &
+			\texttt{0041} &
+			\texttt{41} \\\hline
+		\raisebox{-3pt}{
+			\includegraphics[height=12pt]{U+0000A9.png}
+		} &
+			\texttt{U+0000A9} &
+			\texttt{000000A9} &
+			\texttt{00A9} &
+			\texttt{C2 A9} \\\hline
+		\raisebox{-3pt}{
+			\includegraphics[height=12pt]{U+002202.png}
+		} &
+			\texttt{U+002202} &
+			\texttt{00002202} &
+			\texttt{2202} &
+			\texttt{E2 88 82} \\\hline
+		\raisebox{-3pt}{
+			\includegraphics[height=12pt]{U+01F530.png}
+		} &
+			\texttt{U+01F530} &
+			\texttt{0001F530} &
+			\texttt{D83D DD30} &
+			\texttt{F0 9F 94 B0} \\\hline
+	\end{tabular}
+	\end{center}
+	\caption{
+		A selection of Unicode characters and ways to encode
+		them as octets.
+	}
+	\label{UC}
+\end{figure}
+\end{center}
 
 The code units in the UTF-16 and UTF-32 encodings need to have a defined
 \emph{endianness} when serialised into a sequence of octets. To avoid this, I
@@ -92,8 +103,8 @@ How would I \emph{generate} a useful frequency table for text, if all I am
 dealing with are sequences of octets? The approach used for binary data would
 yield four separate entries for the character \includegraphics[height=12pt]
 {U+01F530.png} --- \texttt{F0}, \texttt{9F}, \texttt{94} and \texttt{B0}, which
-is clearly a poor result. My solution, albeit inelegant, was to write two
-frequency table generators:
+is clearly a poor result (see figure~\ref{FTO}). My solution, albeit
+inelegant, was to write two frequency table generators:
 
 \begin{itemize}
 	\item
@@ -108,5 +119,35 @@ This is still better than a naïve approach where all of the algorithms use
 While \texttt{D83D} and \texttt{DD30} are not valid characters, they would
 receive separate entries in the frequency table, causing the table to fail to
 correctly display in the UI.
+
+The result of all of this over-engineering is an implementation that is
+flexible enough to be used with binary data, while supporting the nuances of
+Unicode well enough to treat all characters up to \texttt{U+10FFFF} as
+first-class citizens (see figure~\ref{FTC}).
+
+\begin{center}
+\begin{figure}[b]
+	\begin{center}
+		\includegraphics[height=9cm]{FTO.png}
+	\end{center}
+	\caption{
+		Frequency table generation, when dealing purely with octets.
+	}
+	\label{FTO}
+\end{figure}
+\end{center}
+
+\begin{center}
+\begin{figure}[b]
+	\begin{center}
+		\includegraphics[height=9cm]{FTC.png}
+	\end{center}
+	\caption{
+		Frequency table generation, when dealing with octets known to
+		be UTF-8.
+	}
+	\label{FTC}
+\end{figure}
+\end{center}
 
 \end{document}
