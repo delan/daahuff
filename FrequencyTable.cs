@@ -31,7 +31,7 @@ namespace Asgn
     /// </summary>
     class FrequencyTable
     {
-        Dictionary<byte[], double> freq = new Dictionary<byte[], double>(
+        public Dictionary<byte[], double> freq = new Dictionary<byte[], double>(
             new ByteArrayComparer()
         );
 
