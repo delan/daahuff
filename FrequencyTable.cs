@@ -121,22 +121,22 @@ namespace Asgn
             string[] lines = input.Split(new char[] { '\n', '\r' });
             foreach (string line in lines)
             {
-                double weight = double.NaN;
+                double frequency = double.NaN;
                 string[] tokens = line.Split(':');
                 string text = string.Join(":", tokens, 0, tokens.Length - 1);
                 if (text.Length == 0)
                     continue;
                 try
                 {
-                    weight = double.Parse(tokens[tokens.Length - 1]);
+                    frequency = double.Parse(tokens[tokens.Length - 1]);
                     // now for the actual frequency stuff
                     byte[] symbol = Encoding.UTF8.GetBytes(text);
                     if (freq.ContainsKey(symbol))
-                        freq[symbol] += weight;
+                        freq[symbol] += frequency;
                     else
-                        freq[symbol] = weight;
+                        freq[symbol] = frequency;
                 }
-                catch (FormatException e)
+                catch
                 {
                     // probably an empty line
                 }
