@@ -29,18 +29,32 @@ namespace Asgn
         {
             FrequencyTable table = new FrequencyTable();
             table.loadUIString(txtFreqTbl.Text);
-            byte[] input = Encoding.UTF8.GetBytes(txtPlain.Text);
-            byte[] output = HuffmanTranscoder.deflateBinaryData(input, table);
-            txtCompressed.Text = Base64.encode(output, Base64.Hannes);
+            if (table.freq.Count > 0)
+            {
+                byte[] input = Encoding.UTF8.GetBytes(txtPlain.Text);
+                byte[] output = HuffmanTranscoder.deflateBinaryData(input, table);
+                txtCompressed.Text = Base64.encode(output, Base64.Hannes);
+            }
+            else
+            {
+                MessageBox.Show("Please ensure that the frequency table is not empty.");
+            }
         }
 
         private void btnDecompress_Click(object sender, RoutedEventArgs e)
         {
             FrequencyTable table = new FrequencyTable();
             table.loadUIString(txtFreqTbl.Text);
-            byte[] input = Base64.decode(txtCompressed.Text, Base64.Hannes);
-            byte[] output = HuffmanTranscoder.inflateBinaryData(input, table);
-            txtPlain.Text = Encoding.UTF8.GetString(output);
+            if (table.freq.Count > 0)
+            {
+                byte[] input = Base64.decode(txtCompressed.Text, Base64.Hannes);
+                byte[] output = HuffmanTranscoder.inflateBinaryData(input, table);
+                txtPlain.Text = Encoding.UTF8.GetString(output);
+            }
+            else
+            {
+                MessageBox.Show("Please ensure that the frequency table is not empty.");
+            }
         }
 
         private void btnFreq_Click(object sender, RoutedEventArgs e)
