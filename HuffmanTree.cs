@@ -12,7 +12,7 @@ namespace Asgn
     {
         public double frequency;
         public byte[] symbol;
-        public BitArray sequence = new BitArray();
+        public BitArray sequence;
         public HuffmanTreeNode parent, left, right;
 
         public int CompareTo(HuffmanTreeNode other)
@@ -49,7 +49,7 @@ namespace Asgn
                 leaves.Add(node);
             }
             // then insert (n - 1) internal nodes
-            for (int i = 0; i < pq.length; i++)
+            for (int i = 1; i < leaves.Count; i++)
             {
                 HuffmanTreeNode node = new HuffmanTreeNode();
                 node.left = pq.remove();
@@ -63,6 +63,7 @@ namespace Asgn
             foreach (HuffmanTreeNode leaf in leaves)
             {
                 HuffmanTreeNode node = leaf;
+                leaf.sequence = new BitArray();
                 while (node.parent != null)
                 {
                     if (node == node.parent.left)
