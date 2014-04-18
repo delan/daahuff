@@ -8,7 +8,7 @@ namespace Asgn
     /// <summary>
     /// Class representing a min-heap.
     /// </summary>
-    class MinHeap<T> where T : IComparable
+    class MinHeap<T> where T : IComparable<T>
     {
         List<T> data = new List<T>();
 
