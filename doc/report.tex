@@ -1,4 +1,4 @@
-\documentclass[a4paper,titlepage,12pt]{article}
+\documentclass[a4paper,12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[margin=1in]{geometry}
@@ -22,6 +22,37 @@
 \begin{document}
 
 \maketitle
+
+\section{Implemented functionality}
+
+Frequency table generation is supported, as are both compression and
+decompression with the Huffman coding scheme. Symbols of arbitrary length are
+supported, only in the sense that Unicode characters that are represented by
+multiple octets in UTF-8 are intuitively treated as single symbols.
+
+\section{Known defects}
+
+While there is a check for missing symbols during compression, there is no such
+equivalent guard in the decompression routine. If the Huffman tree is
+inappropriate for the input data, the program will likely fall into an infinite
+loop, attempting to find a leaf node.
+
+Decompression \emph{may} yield a few more superfluous symbols than one might
+expect, but still a negligible number regardless. This is because of the way
+the compressed data are handled: the \texttt{BitArray} is converted to a
+\texttt{byte[]} which pads the data with up to 7 bits, \emph{then} the data are
+encoded with Base64. On the other hand, § 1.3 of the specification may imply a
+direct conversion to 6-bit symbols --- padding the data with up to 5 bits.
+
+\section{Build information}
+
+This implementation is based on the foundation supplied as
+\texttt{DAA300Asgn\_Base.zip} with minor changes. While it was developed using
+Visual C\# 2013, it should also compile and run on Visual C\# 2010 without
+issues. To run this assignment, open \texttt{Asgn.sln} and hit F5 within Visual
+Studio.
+
+\newpage
 
 \section{Design considerations regarding data types}
 
