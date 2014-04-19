@@ -37,9 +37,9 @@ namespace Asgn
                     byte[] output = HuffmanTranscoder.DeflateUTF8(input, table);
                     txtCompressed.Text = Base64.Encode(output, Base64.Hannes);
                 }
-                catch (KeyNotFoundException)
+                catch (KeyNotFoundException exception)
                 {
-                    MessageBox.Show("Please ensure that the frequency table is complete for the given input.");
+                    MessageBox.Show("Frequency table missing entry: " + exception.Message);
                 }
             }
             else

@@ -27,7 +27,7 @@ namespace Asgn
                     }
                 }
                 if (j < 0)
-                    throw new KeyNotFoundException();
+                    throw new KeyNotFoundException(string.Format("0x{0:X2}", symbol[0]));
             }
             return output.GetBytes();
         }
@@ -52,7 +52,7 @@ namespace Asgn
                     }
                 }
                 if (j < 0)
-                    throw new KeyNotFoundException();
+                    throw new KeyNotFoundException(Encoding.UTF8.GetString(symbol));
             }
             return output.GetBytes();
         }
