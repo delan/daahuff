@@ -37,53 +37,13 @@ namespace Asgn
         /// </summary>
         public void generateFromUTF8(byte[] input)
         {
-            UTF8Encoding validator = new UTF8Encoding(
-                false,  // whether or not to use byte order marks
-                true    // whether or not to throw an exception upon invalid input
-            );
             freq.Clear();
-            try
-            {
-                validator.GetString(input);
-            }
-            catch
-            {
+            if (!UnicodeUtils.validate(input))
                 return;
-            }
-            // validating that the octet sequence is correct UTF-8 prior to using it
-            // allows us to make assumptions that would normally be unsafe
             int i = 0; // index in input
             while (i < input.Length)
             {
-                int j = 0; // index in symbol
-                // the maximum sequence length is 4 octets, given RFC 3629
-                byte[] symbol = new byte[4];
-                byte head = input[i]; // octet to be examined
-                if ((head & 0xF8) == 0xF0)  // 4 octet sequence
-                {
-                    symbol[j++] = input[i++];
-                    symbol[j++] = input[i++];
-                    symbol[j++] = input[i++];
-                    symbol[j++] = input[i++];
-                }
-                if ((head & 0xF0) == 0xE0)  // 3 octet sequence
-                {
-                    symbol[j++] = input[i++];
-                    symbol[j++] = input[i++];
-                    symbol[j++] = input[i++];
-                }
-                if ((head & 0xE0) == 0xC0)  // 2 octet sequence
-                {
-                    symbol[j++] = input[i++];
-                    symbol[j++] = input[i++];
-                }
-                if ((head & 0x80) == 0x00)  // 1 octet sequence
-                {
-                    symbol[j++] = input[i++];
-                }
-                // truncate the symbol to the actual number of octets
-                Array.Resize(ref symbol, j);
-                // now for the actual frequency stuff
+                byte[] symbol = UnicodeUtils.step(input, ref i);
                 if (freq.ContainsKey(symbol))
                     freq[symbol] += 1.0;
                 else
