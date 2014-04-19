@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="DAA300 Text Scrambler/Compressor" Height="458" Width="525">
     <Grid Height="443">
-        <TextBox Height="162" Margin="16,31,194,0" Name="txtPlain" VerticalAlignment="Top" AcceptsReturn="True" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" />
+        <TextBox Height="162" Margin="16,31,194,0" Name="txtPlain" VerticalAlignment="Top" AcceptsReturn="True" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" Text="🔰 Hellø 🔰 worl∂ 🔰" />
         <TextBox AcceptsReturn="True" Height="162" Margin="16,221,194,0" Name="txtCompressed" VerticalAlignment="Top" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" />
         <TextBox Height="352" HorizontalAlignment="Right" Margin="0,31,12,0" Name="txtFreqTbl" VerticalAlignment="Top" Width="176" AcceptsReturn="True" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" />
         <Label Content="Compressed Text:" Height="28" HorizontalAlignment="Left" Margin="16,199,0,0" Name="lblCompressed" VerticalAlignment="Top" />
