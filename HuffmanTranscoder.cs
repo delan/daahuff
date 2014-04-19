@@ -44,6 +44,7 @@ namespace Asgn
                     foreach (byte octet in node.symbol)
                         output.Add(octet);
                     node = tree.head;
+                    i--;
                 }
             }
             return output.ToArray();

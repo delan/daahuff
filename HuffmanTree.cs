@@ -72,6 +72,7 @@ namespace Asgn
                         leaf.sequence.add(true);
                     node = node.parent;
                 }
+                leaf.sequence.reverse();
             }
             // now the min node is the root of the tree
             head = pq.remove();
