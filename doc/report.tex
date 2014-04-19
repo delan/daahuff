@@ -27,7 +27,7 @@
 
 One of my goals when completing this assignment was to ensure that the core
 Huffman and Base64 algorithms only ever interact with sequences of octets
-(\texttt{byte[]}). Beyond making them agnostic of text encodings, this would
+(\texttt{byte[]}) --- beyond making them agnostic of text encodings, this would
 allow them to be used with other data which may not necessarily be textual.
 
 Of course, the implementation still needed to conform to the specification, and
@@ -88,23 +88,27 @@ either. For instance:
 \end{figure}
 \end{center}
 
-The code units in the UTF-16 and UTF-32 encodings need to have a defined
-\emph{endianness} when serialised into a sequence of octets. To avoid this, I
-chose UTF-8 as the internal representation of any text where possible, only
-using \texttt{string} and \texttt{char} when dealing with the UI. UTF-8 also
-provides the unique benefit of backwards compatibility with ASCII.
+Furthermore, the code units in the UTF-16 and UTF-32 encodings need to have a
+defined \emph{endianness} when serialised into a sequence of octets. To avoid
+the need to consider this, I chose UTF-8 as the internal representation of any
+text where possible, only using \texttt{string} and \texttt{char} when dealing
+with the UI. Among other perks, UTF-8 also provides the unique benefit of
+being totally backwards compatible with ASCII.
 
-This raises an interesting problem, even though I implemented § 2.2 of the
-assignment, where frequency tables with arbitrary-length symbols are
-\emph{accepted}. For example, I would accept a frequency table with a symbol
-consisting of the octets \texttt{F0 9F 94 B0}.
+To facilitate this, I had to partially implement § 2.2 of the assignment, to
+the extent that characters represented by multiple octets in UTF-8 shall be
+treated as single symbols in frequency tables. For instance, the sequence
+\texttt{F0 9F 94 B0} would be treated as a single symbol. This only considers
+frequency tables read from the UI.
 
 How would I \emph{generate} a useful frequency table for text, if all I am
 dealing with are sequences of octets? The approach used for binary data would
 yield four separate entries for the character \includegraphics[height=12pt]
-{U+01F530.png} --- \texttt{F0}, \texttt{9F}, \texttt{94} and \texttt{B0}, which
-is clearly a poor result (see figure~\ref{FTO}). My solution, albeit
-inelegant, was to write two frequency table generators:
+{U+01F530.png} --- \texttt{F0}, \texttt{9F}, \texttt{94} and \texttt{B0}. While
+this is how a compression tool would work in real life, it is more confusing in
+the context of this assignment.
+
+My solution was to write two stubs each, for the generators and compressors:
 
 \begin{itemize}
 	\item
@@ -122,32 +126,6 @@ correctly display in the UI.
 
 The result of all of this over-engineering is an implementation that is
 flexible enough to be used with binary data, while supporting the nuances of
-Unicode well enough to treat all characters up to \texttt{U+10FFFF} as
-first-class citizens (see figure~\ref{FTC}).
-
-\begin{center}
-\begin{figure}[b]
-	\begin{center}
-		\includegraphics[height=9cm]{FTO.png}
-	\end{center}
-	\caption{
-		Frequency table generation, when dealing purely with octets.
-	}
-	\label{FTO}
-\end{figure}
-\end{center}
-
-\begin{center}
-\begin{figure}[b]
-	\begin{center}
-		\includegraphics[height=9cm]{FTC.png}
-	\end{center}
-	\caption{
-		Frequency table generation, when dealing with octets known to
-		be UTF-8.
-	}
-	\label{FTC}
-\end{figure}
-\end{center}
+Unicode well enough to yield minimal surprising behaviour when the GUI is used.
 
 \end{document}
