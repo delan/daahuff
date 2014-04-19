@@ -29,7 +29,7 @@ namespace Asgn
         {
             FrequencyTable table = new FrequencyTable();
             table.LoadUIString(txtFreqTbl.Text);
-            if (table.Freq.Count > 0)
+            if (table.Freq.Count > 0 && txtPlain.Text.Length > 0)
             {
                 byte[] input = Encoding.UTF8.GetBytes(txtPlain.Text);
                 try
@@ -44,7 +44,7 @@ namespace Asgn
             }
             else
             {
-                MessageBox.Show("Please ensure that the frequency table is not empty.");
+                MessageBox.Show("Please ensure that the symbol and plain fields are not empty.");
             }
         }
 
@@ -52,7 +52,7 @@ namespace Asgn
         {
             FrequencyTable table = new FrequencyTable();
             table.LoadUIString(txtFreqTbl.Text);
-            if (table.Freq.Count > 0)
+            if (table.Freq.Count > 0 && txtCompressed.Text.Length > 0)
             {
                 byte[] input = Base64.Decode(txtCompressed.Text, Base64.Hannes);
                 byte[] output = HuffmanTranscoder.Inflate(input, table);
@@ -60,7 +60,7 @@ namespace Asgn
             }
             else
             {
-                MessageBox.Show("Please ensure that the frequency table is not empty.");
+                MessageBox.Show("Please ensure that the symbol and compressed fields are not empty.");
             }
         }
 
