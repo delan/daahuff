@@ -34,7 +34,7 @@ namespace Asgn
                 byte[] input = Encoding.UTF8.GetBytes(txtPlain.Text);
                 try
                 {
-                    byte[] output = HuffmanTranscoder.deflateBinaryData(input, table);
+                    byte[] output = HuffmanTranscoder.deflateUTF8(input, table);
                     txtCompressed.Text = Base64.encode(output, Base64.Hannes);
                 }
                 catch (KeyNotFoundException)
