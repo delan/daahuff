@@ -57,7 +57,7 @@ namespace Asgn
             return output.octets();
         }
 
-        public static byte[] inflateBinaryData(byte[] input, FrequencyTable table)
+        public static byte[] inflate(byte[] input, FrequencyTable table)
         {
             BitArray bits = new BitArray(input);
             List<byte> output = new List<byte>();

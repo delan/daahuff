@@ -55,7 +55,7 @@ namespace Asgn
             if (table.freq.Count > 0)
             {
                 byte[] input = Base64.decode(txtCompressed.Text, Base64.Hannes);
-                byte[] output = HuffmanTranscoder.inflateBinaryData(input, table);
+                byte[] output = HuffmanTranscoder.inflate(input, table);
                 txtPlain.Text = Encoding.UTF8.GetString(output);
             }
             else
