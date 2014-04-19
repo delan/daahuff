@@ -32,8 +32,15 @@ namespace Asgn
             if (table.freq.Count > 0)
             {
                 byte[] input = Encoding.UTF8.GetBytes(txtPlain.Text);
-                byte[] output = HuffmanTranscoder.deflateBinaryData(input, table);
-                txtCompressed.Text = Base64.encode(output, Base64.Hannes);
+                try
+                {
+                    byte[] output = HuffmanTranscoder.deflateBinaryData(input, table);
+                    txtCompressed.Text = Base64.encode(output, Base64.Hannes);
+                }
+                catch (KeyNotFoundException)
+                {
+                    MessageBox.Show("Please ensure that the frequency table is complete for the given input.");
+                }
             }
             else
             {

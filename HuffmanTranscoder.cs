@@ -16,10 +16,18 @@ namespace Asgn
             HuffmanTree tree = new HuffmanTree(table);
             for (int i = 0; i < input.Length; i++)
             {
+                int j = tree.leaves.Count;
                 byte[] symbol = new byte[] { input[i] };
-                for (int j = tree.leaves.Count - 1; j >= 0; j--)
+                while (--j >= 0)
+                {
                     if (symbol.SequenceEqual(tree.leaves[j].symbol))
+                    {
                         output.append(tree.leaves[j].sequence);
+                        break; // do not remove this
+                    }
+                }
+                if (j < 0)
+                    throw new KeyNotFoundException();
             }
             return output.octets();
         }
