@@ -28,14 +28,14 @@ namespace Asgn
         private void btnCompress_Click(object sender, RoutedEventArgs e)
         {
             FrequencyTable table = new FrequencyTable();
-            table.loadUIString(txtFreqTbl.Text);
-            if (table.freq.Count > 0)
+            table.LoadUIString(txtFreqTbl.Text);
+            if (table.Freq.Count > 0)
             {
                 byte[] input = Encoding.UTF8.GetBytes(txtPlain.Text);
                 try
                 {
-                    byte[] output = HuffmanTranscoder.deflateUTF8(input, table);
-                    txtCompressed.Text = Base64.encode(output, Base64.Hannes);
+                    byte[] output = HuffmanTranscoder.DeflateUTF8(input, table);
+                    txtCompressed.Text = Base64.Encode(output, Base64.Hannes);
                 }
                 catch (KeyNotFoundException)
                 {
@@ -51,11 +51,11 @@ namespace Asgn
         private void btnDecompress_Click(object sender, RoutedEventArgs e)
         {
             FrequencyTable table = new FrequencyTable();
-            table.loadUIString(txtFreqTbl.Text);
-            if (table.freq.Count > 0)
+            table.LoadUIString(txtFreqTbl.Text);
+            if (table.Freq.Count > 0)
             {
-                byte[] input = Base64.decode(txtCompressed.Text, Base64.Hannes);
-                byte[] output = HuffmanTranscoder.inflate(input, table);
+                byte[] input = Base64.Decode(txtCompressed.Text, Base64.Hannes);
+                byte[] output = HuffmanTranscoder.Inflate(input, table);
                 txtPlain.Text = Encoding.UTF8.GetString(output);
             }
             else
@@ -68,8 +68,8 @@ namespace Asgn
         {
             FrequencyTable table = new FrequencyTable();
             byte[] input = Encoding.UTF8.GetBytes(txtPlain.Text);
-            table.generateFromUTF8(input);
-            txtFreqTbl.Text = table.ToString();
+            table.GenerateUTF8(input);
+            txtFreqTbl.Text = table.ToUIString();
         }
     }
 }

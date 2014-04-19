@@ -10,7 +10,7 @@ namespace Asgn
     /// </summary>
     class FrequencyTable
     {
-        public Dictionary<byte[], double> freq = new Dictionary<byte[], double>(
+        public Dictionary<byte[], double> Freq = new Dictionary<byte[], double>(
             new ByteArrayComparer()
         );
 
@@ -18,16 +18,16 @@ namespace Asgn
         /// Generate frequency information from raw binary data.
         /// The symbols yielded are single octets.
         /// </summary>
-        public void generateFromBinaryData(byte[] input)
+        public void Generate(byte[] input)
         {
-            freq.Clear();
+            Freq.Clear();
             for (int i = 0; i < input.Length; i++)
             {
                 byte[] symbol = new byte[] { input[i] };
-                if (freq.ContainsKey(symbol))
-                    freq[symbol] += 1.0;
+                if (Freq.ContainsKey(symbol))
+                    Freq[symbol] += 1.0;
                 else
-                    freq[symbol] = 1.0;
+                    Freq[symbol] = 1.0;
             }
         }
 
@@ -35,28 +35,28 @@ namespace Asgn
         /// Generate frequency information from a UTF-8 string.
         /// The symbols yielded are sequences of octets that form Unicode code points.
         /// </summary>
-        public void generateFromUTF8(byte[] input)
+        public void GenerateUTF8(byte[] input)
         {
-            freq.Clear();
-            if (!UnicodeUtils.validate(input))
+            Freq.Clear();
+            if (!UnicodeUtils.ValidateUTF8(input))
                 return;
             int i = 0; // index in input
             while (i < input.Length)
             {
-                byte[] symbol = UnicodeUtils.step(input, ref i);
-                if (freq.ContainsKey(symbol))
-                    freq[symbol] += 1.0;
+                byte[] symbol = UnicodeUtils.StepUTF8(input, ref i);
+                if (Freq.ContainsKey(symbol))
+                    Freq[symbol] += 1.0;
                 else
-                    freq[symbol] = 1.0;
+                    Freq[symbol] = 1.0;
             }
         }
 
         /// <summary>
         /// Load frequency information from a string in the UI format.
         /// </summary>
-        public void loadUIString(string input)
+        public void LoadUIString(string input)
         {
-            freq.Clear();
+            Freq.Clear();
             string[] lines = input.Split(new char[] { '\n', '\r' });
             foreach (string line in lines)
             {
@@ -68,12 +68,11 @@ namespace Asgn
                 try
                 {
                     frequency = double.Parse(tokens[tokens.Length - 1]);
-                    // now for the actual frequency stuff
                     byte[] symbol = Encoding.UTF8.GetBytes(text);
-                    if (freq.ContainsKey(symbol))
-                        freq[symbol] += frequency;
+                    if (Freq.ContainsKey(symbol))
+                        Freq[symbol] += frequency;
                     else
-                        freq[symbol] = frequency;
+                        Freq[symbol] = frequency;
                 }
                 catch
                 {
@@ -86,14 +85,14 @@ namespace Asgn
         /// Returns a string representation suitable for UI use.
         /// Assumes that each symbol is a UTF-8 octet sequence.
         /// </summary>
-        public override string ToString()
+        public string ToUIString()
         {
             StringBuilder output = new StringBuilder();
-            foreach (byte[] symbol in freq.Keys)
+            foreach (byte[] symbol in Freq.Keys)
             {
                 output.Append(Encoding.UTF8.GetString(symbol));
                 output.Append(":");
-                output.Append(freq[symbol].ToString());
+                output.Append(Freq[symbol].ToString());
                 output.Append("\n");
             }
             return output.ToString();

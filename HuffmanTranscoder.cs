@@ -10,74 +10,74 @@ namespace Asgn
     /// </summary>
     static class HuffmanTranscoder
     {
-        public static byte[] deflateBinaryData(byte[] input, FrequencyTable table)
+        public static byte[] Deflate(byte[] input, FrequencyTable table)
         {
             BitArray output = new BitArray();
             HuffmanTree tree = new HuffmanTree(table);
             for (int i = 0; i < input.Length; i++)
             {
                 byte[] symbol = new byte[] { input[i] };
-                int j = tree.leaves.Count;
+                int j = tree.Leaves.Count;
                 while (--j >= 0)
                 {
-                    if (symbol.SequenceEqual(tree.leaves[j].symbol))
+                    if (symbol.SequenceEqual(tree.Leaves[j].Symbol))
                     {
-                        output.append(tree.leaves[j].sequence);
+                        output.Append(tree.Leaves[j].Code);
                         break; // do not remove this
                     }
                 }
                 if (j < 0)
                     throw new KeyNotFoundException();
             }
-            return output.octets();
+            return output.GetBytes();
         }
 
-        public static byte[] deflateUTF8(byte[] input, FrequencyTable table)
+        public static byte[] DeflateUTF8(byte[] input, FrequencyTable table)
         {
             BitArray output = new BitArray();
             HuffmanTree tree = new HuffmanTree(table);
-            if (!UnicodeUtils.validate(input))
+            if (!UnicodeUtils.ValidateUTF8(input))
                 throw new ArgumentException();
             int i = 0; // index in input
             while (i < input.Length)
             {
-                byte[] symbol = UnicodeUtils.step(input, ref i);
-                int j = tree.leaves.Count;
+                byte[] symbol = UnicodeUtils.StepUTF8(input, ref i);
+                int j = tree.Leaves.Count;
                 while (--j >= 0)
                 {
-                    if (symbol.SequenceEqual(tree.leaves[j].symbol))
+                    if (symbol.SequenceEqual(tree.Leaves[j].Symbol))
                     {
-                        output.append(tree.leaves[j].sequence);
+                        output.Append(tree.Leaves[j].Code);
                         break; // do not remove this
                     }
                 }
                 if (j < 0)
                     throw new KeyNotFoundException();
             }
-            return output.octets();
+            return output.GetBytes();
         }
 
-        public static byte[] inflate(byte[] input, FrequencyTable table)
+        public static byte[] Inflate(byte[] input, FrequencyTable table)
         {
             BitArray bits = new BitArray(input);
             List<byte> output = new List<byte>();
             HuffmanTree tree = new HuffmanTree(table);
-            HuffmanTreeNode node = tree.head;
-            for (int i = 0; i < bits.length; i++)
+            HuffmanTreeNode node = tree.Head;
+            for (int i = 0; i < bits.Length; i++)
             {
-                if (bits[i] == false && node.left != null)
+                if (bits[i] == false && node.Left != null)
                 {
-                    node = node.left;
+                    node = node.Left;
                 }
-                else if (bits[i] == true && node.right != null)
+                else if (bits[i] == true && node.Right != null)
                 {
-                    node = node.right;
+                    node = node.Right;
                 }
                 else
                 {
-                    foreach (byte octet in node.symbol)
+                    foreach (byte octet in node.Symbol)
                         output.Add(octet);
-                    node = tree.head;
+                    node = tree.Head;
                     i--;
                 }
             }

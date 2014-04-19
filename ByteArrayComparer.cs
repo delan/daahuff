@@ -13,7 +13,7 @@ namespace Asgn
         public int GetHashCode(byte[] key)
         {
             if (key == null)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException();
             return key.Sum(b => b);
         }
         public bool Equals(byte[] left, byte[] right)

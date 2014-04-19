@@ -13,21 +13,22 @@ namespace Asgn
         /// <summary>
         /// Determines whether or not the given octet sequence is valid UTF-8.
         /// </summary>
-        public static bool validate(byte[] input)
+        public static bool ValidateUTF8(byte[] input)
         {
             UTF8Encoding validator = new UTF8Encoding(
                 false,  // whether or not to use byte order marks
                 true    // whether or not to throw an exception upon invalid input
             );
+            bool good = true;
             try
             {
                 validator.GetString(input);
-                return true;
             }
             catch
             {
-                return false;
+                good = false;
             }
+            return good;
         }
 
         /// <summary>
@@ -35,39 +36,39 @@ namespace Asgn
         /// The given index is used as a starting point, and is updated on completion.
         /// Avoid using this method on input that has not been validated.
         /// </summary>
-        public static byte[] step(byte[] input, ref int i)
+        public static byte[] StepUTF8(byte[] input, ref int i)
         {
             while ((input[i] & 0xC0) == 0x80)
                 i++; // skip continuation octets left over
             int j = 0; // index in symbol
             // the maximum sequence length is 4 octets, given RFC 3629
-            byte[] symbol = new byte[4];
+            byte[] sequence = new byte[4];
             byte head = input[i]; // octet to be examined
             if ((head & 0xF8) == 0xF0)  // 4 octet sequence
             {
-                symbol[j++] = input[i++];
-                symbol[j++] = input[i++];
-                symbol[j++] = input[i++];
-                symbol[j++] = input[i++];
+                sequence[j++] = input[i++];
+                sequence[j++] = input[i++];
+                sequence[j++] = input[i++];
+                sequence[j++] = input[i++];
             }
             if ((head & 0xF0) == 0xE0)  // 3 octet sequence
             {
-                symbol[j++] = input[i++];
-                symbol[j++] = input[i++];
-                symbol[j++] = input[i++];
+                sequence[j++] = input[i++];
+                sequence[j++] = input[i++];
+                sequence[j++] = input[i++];
             }
             if ((head & 0xE0) == 0xC0)  // 2 octet sequence
             {
-                symbol[j++] = input[i++];
-                symbol[j++] = input[i++];
+                sequence[j++] = input[i++];
+                sequence[j++] = input[i++];
             }
             if ((head & 0x80) == 0x00)  // 1 octet sequence
             {
-                symbol[j++] = input[i++];
+                sequence[j++] = input[i++];
             }
             // truncate the symbol to the actual number of octets
-            Array.Resize(ref symbol, j);
-            return symbol;
+            Array.Resize(ref sequence, j);
+            return sequence;
         }
     }
 }

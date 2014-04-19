@@ -10,9 +10,9 @@ namespace Asgn
     /// </summary>
     class Base64Style
     {
-        public string map;
-        public char? padding;
-        public Dictionary<char, byte> inverse;
+        public string Map;
+        public char? Padding;
+        public Dictionary<char, byte> Inverse;
 
         /// <summary>
         /// Automatically generates an efficient inverse mapping.
@@ -21,16 +21,16 @@ namespace Asgn
         /// <param name="padding">An optional character used for padding, such as '=', or null for none.</param>
         public Base64Style(string map, char? padding)
         {
-            this.map = map;
-            this.padding = padding;
-            inverse = new Dictionary<char, byte>();
+            Map = map;
+            Padding = padding;
+            Inverse = new Dictionary<char, byte>();
             for (byte i = 0; i < map.Length; i++)
-                inverse[map[i]] = i;
+                Inverse[map[i]] = i;
         }
     }
 
     /// <summary>
-    /// Base64 static methods encode() and decode() plus common flavours.
+    /// Base64 static methods Encode() and Decode() plus common flavours.
     /// </summary>
     static class Base64
     {
@@ -56,7 +56,7 @@ namespace Asgn
         /// <param name="input">The array of input bytes to transform.</param>
         /// <param name="style">The flavour of Base64 encoding to use.</param>
         /// <returns>A string with the Base64 representation of the input.</returns>
-        public static string encode(byte[] input, Base64Style style)
+        public static string Encode(byte[] input, Base64Style style)
         {
             int n = input.Length;
             int symbol; // six output bits
@@ -65,31 +65,31 @@ namespace Asgn
             for (int i = 0; i < n; i++) // walk 3 input bytes at a time
             {
                 symbol = input[i] >> 2;                 // octet 0 [7..2] -> symbol 0 [5..0]
-                output.Append(style.map[symbol]);       // symbol 0 complete
+                output.Append(style.Map[symbol]);       // symbol 0 complete
                 symbol = (input[i] & 3) << 4;           // octet 0 [1..0] -> symbol 1 [5..4]
                 if (++i == n)                           // are we out of octets?
                 {
-                    output.Append(style.map[symbol]);   // symbol 1 complete
+                    output.Append(style.Map[symbol]);   // symbol 1 complete
                     break;
                 }
                 symbol |= input[i] >> 4;                // octet 1 [7..4] -> symbol 1 [3..0]
-                output.Append(style.map[symbol]);       // symbol 1 complete
+                output.Append(style.Map[symbol]);       // symbol 1 complete
                 symbol = (input[i] & 15) << 2;          // octet 1 [3..0] -> symbol 2 [5..2]
                 if (++i == n)                           // are we out of octets?
                 {
-                    output.Append(style.map[symbol]);   // symbol 2 complete
+                    output.Append(style.Map[symbol]);   // symbol 2 complete
                     break;
                 }
                 symbol |= input[i] >> 6;                // octet 2 [7..6] -> symbol 2 [1..0]
-                output.Append(style.map[symbol]);       // symbol 2 complete
+                output.Append(style.Map[symbol]);       // symbol 2 complete
                 symbol = input[i] & 63;                 // octet 2 [5..0] -> symbol 3 [5..0]
-                output.Append(style.map[symbol]);       // symbol 3 complete
+                output.Append(style.Map[symbol]);       // symbol 3 complete
             }
-            if (null != style.padding)
+            if (null != style.Padding)
             {
                 // add padding bytes if the style requires it
                 int count = (3 - n % 3) % 3;
-                string pad = new String((char)style.padding, count);
+                string pad = new String((char)style.Padding, count);
                 output.Append(pad);
             }
             return output.ToString();
@@ -102,7 +102,7 @@ namespace Asgn
         /// <param name="input">The Base64 string to decode.</param>
         /// <param name="style">The flavour of Base64 encoding to use.</param>
         /// <returns>A new array with bytes that were represented by the input.</returns>
-        public static byte[] decode(string input, Base64Style style)
+        public static byte[] Decode(string input, Base64Style style)
         {
             int n = input.Length;
             int octet; // eight output bits
@@ -113,33 +113,33 @@ namespace Asgn
             while (true)
             {
                 while (++i < n)
-                    if (style.inverse.ContainsKey(input[i]))
+                    if (style.Inverse.ContainsKey(input[i]))
                         break;
                 if (i == n)
                     break;
-                octet = style.inverse[input[i]] << 2;           // symbol 0 [5..0] -> octet 0 [7..2]
+                octet = style.Inverse[input[i]] << 2;           // symbol 0 [5..0] -> octet 0 [7..2]
                 while (++i < n)
-                    if (style.inverse.ContainsKey(input[i]))
+                    if (style.Inverse.ContainsKey(input[i]))
                         break;
                 if (i == n)
                     break;
-                octet |= style.inverse[input[i]] >> 4;          // symbol 1 [5..4] -> octet 0 [1..0]
+                octet |= style.Inverse[input[i]] >> 4;          // symbol 1 [5..4] -> octet 0 [1..0]
                 output[j++] = (byte)octet;                      // octet 0 complete
-                octet = (style.inverse[input[i]] & 15) << 4;    // symbol 1 [3..0] -> octet 1 [7..4]
+                octet = (style.Inverse[input[i]] & 15) << 4;    // symbol 1 [3..0] -> octet 1 [7..4]
                 while (++i < n)
-                    if (style.inverse.ContainsKey(input[i]))
+                    if (style.Inverse.ContainsKey(input[i]))
                         break;
                 if (i == n)
                     break;
-                octet |= style.inverse[input[i]] >> 2;          // symbol 2 [5..2] -> octet 1 [3..0]
+                octet |= style.Inverse[input[i]] >> 2;          // symbol 2 [5..2] -> octet 1 [3..0]
                 output[j++] = (byte)octet;                      // octet 1 complete
-                octet = (style.inverse[input[i]] & 3) << 6;     // symbol 2 [1..0] -> octet 2 [7..6]
+                octet = (style.Inverse[input[i]] & 3) << 6;     // symbol 2 [1..0] -> octet 2 [7..6]
                 while (++i < n)
-                    if (style.inverse.ContainsKey(input[i]))
+                    if (style.Inverse.ContainsKey(input[i]))
                         break;
                 if (i == n)
                     break;
-                octet |= style.inverse[input[i]];               // symbol 3 [5..0] -> octet 2 [5..0]
+                octet |= style.Inverse[input[i]];               // symbol 3 [5..0] -> octet 2 [5..0]
                 output[j++] = (byte)octet;                      // octet 2 complete
             }
             // truncate the output byte array to the actual number of octets

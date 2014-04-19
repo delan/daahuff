@@ -6,23 +6,23 @@ using System.Text;
 namespace Asgn
 {
     /// <summary>
-    /// Class representing a node of any kind in a Huffman tree.
+    /// Class representing a node in a Huffman tree.
     /// </summary>
     class HuffmanTreeNode : IComparable<HuffmanTreeNode>
     {
-        public double frequency;
-        public byte[] symbol;
-        public BitArray sequence;
-        public HuffmanTreeNode parent, left, right;
+        public double Frequency;
+        public byte[] Symbol;
+        public BitArray Code;
+        public HuffmanTreeNode Parent, Left, Right;
 
         public int CompareTo(HuffmanTreeNode other)
         {
-            int retval = 0;
-            if (frequency < other.frequency)
-                retval = -1;
-            if (frequency > other.frequency)
-                retval = 1;
-            return retval;
+            int output = 0;
+            if (Frequency < other.Frequency)
+                output = -1;
+            if (Frequency > other.Frequency)
+                output = 1;
+            return output;
         }
     }
 
@@ -31,51 +31,56 @@ namespace Asgn
     /// </summary>
     class HuffmanTree
     {
-        public HuffmanTreeNode head;
-        public List<HuffmanTreeNode> leaves = new List<HuffmanTreeNode>();
-
-        MinHeap<HuffmanTreeNode> pq = new MinHeap<HuffmanTreeNode>();
+        public HuffmanTreeNode Head;
+        public List<HuffmanTreeNode> Leaves;
+        MinHeap<HuffmanTreeNode> PriorityQueue;
 
         public HuffmanTree(FrequencyTable table)
         {
+            Leaves = new List<HuffmanTreeNode>();
+            PriorityQueue = new MinHeap<HuffmanTreeNode>();
+
             // first insert all leaf nodes into the min-heap
-            foreach (var pair in table.freq)
+            foreach (var pair in table.Freq)
             {
                 HuffmanTreeNode node = new HuffmanTreeNode() {
-                    frequency = pair.Value,
-                    symbol = pair.Key
+                    Frequency = pair.Value,
+                    Symbol = pair.Key
                 };
-                pq.insert(node);
-                leaves.Add(node);
+                PriorityQueue.Insert(node);
+                Leaves.Add(node);
             }
+
             // then insert (n - 1) internal nodes
-            for (int i = 1; i < leaves.Count; i++)
+            for (int i = 1; i < Leaves.Count; i++)
             {
                 HuffmanTreeNode node = new HuffmanTreeNode();
-                node.left = pq.remove();
-                node.right = pq.remove();
-                node.frequency = node.left.frequency + node.right.frequency;
-                node.left.parent = node;
-                node.right.parent = node;
-                pq.insert(node);
+                node.Left = PriorityQueue.Remove();
+                node.Right = PriorityQueue.Remove();
+                node.Frequency = node.Left.Frequency + node.Right.Frequency;
+                node.Left.Parent = node;
+                node.Right.Parent = node;
+                PriorityQueue.Insert(node);
             }
+
             // precalculate the bit sequences for each symbol
-            foreach (HuffmanTreeNode leaf in leaves)
+            foreach (HuffmanTreeNode leaf in Leaves)
             {
                 HuffmanTreeNode node = leaf;
-                leaf.sequence = new BitArray();
-                while (node.parent != null)
+                leaf.Code = new BitArray();
+                while (node.Parent != null)
                 {
-                    if (node == node.parent.left)
-                        leaf.sequence.add(false);
-                    if (node == node.parent.right)
-                        leaf.sequence.add(true);
-                    node = node.parent;
+                    if (node == node.Parent.Left)
+                        leaf.Code.Add(false);
+                    if (node == node.Parent.Right)
+                        leaf.Code.Add(true);
+                    node = node.Parent;
                 }
-                leaf.sequence.reverse();
+                leaf.Code.Reverse();
             }
+
             // now the min node is the root of the tree
-            head = pq.remove();
+            Head = PriorityQueue.Remove();
         }
     }
 }
