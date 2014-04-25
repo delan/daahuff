@@ -53,6 +53,8 @@ namespace Asgn
                     node = node.Left;
                 }
             }
+            if (node.Symbol != null)
+                output.Append(node.Symbol);
             return output.ToString();
         }
     }
