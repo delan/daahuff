@@ -51,8 +51,6 @@ namespace Asgn
                         symbol = "\n";
                     else if (text == "\\r")
                         symbol = "\r";
-                    else if (text == "\\t")
-                        symbol = "\t";
                     else if (text == "\\\\")
                         symbol = "\\";
                     else
@@ -81,8 +79,6 @@ namespace Asgn
                     output.Append("\\n");
                 else if (symbol == "\r")
                     output.Append("\\r");
-                else if (symbol == "\t")
-                    output.Append("\\t");
                 else if (symbol == "\\")
                     output.Append("\\\\");
                 else
