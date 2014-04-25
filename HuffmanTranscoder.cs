@@ -41,7 +41,7 @@ namespace Asgn
             if (tree.Leaves.Count < 2)
                 throw new ArgumentException("Cannot deflate data with only one symbol");
             if (!UnicodeUtils.ValidateUTF8(input))
-                throw new ArgumentException();
+                throw new ArgumentException("Input is not valid UTF-8");
             int i = 0; // index in input
             while (i < input.Length)
             {
