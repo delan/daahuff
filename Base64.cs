@@ -41,7 +41,6 @@ namespace Asgn
         /// Transforms a Base64 string into the bits that it represents.
         /// </summary>
         /// <param name="input">The Base64 string to decode.</param>
-        /// <param name="style">The flavour of Base64 encoding to use.</param>
         /// <returns>The bits that were represented by the input.</returns>
         public static DAABitArray Decode(string input)
         {

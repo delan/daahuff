@@ -19,6 +19,7 @@ namespace Asgn
                 bool found = false;
                 for (int j = 0; j < tree.Leaves.Count; j++)
                 {
+                    // limitation: match on single character symbols
                     if (input[i] == tree.Leaves[j].Symbol[0])
                     {
                         found = true;
