@@ -37,6 +37,9 @@ namespace Asgn
 
         public HuffmanTree(FrequencyTable table)
         {
+            if (table.Freq.Count < 2)
+                throw new ArgumentException("Huffman trees require at least two symbols");
+
             Leaves = new List<HuffmanTreeNode>();
             PriorityQueue = new MinHeap<HuffmanTreeNode>();
 
