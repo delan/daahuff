@@ -10,40 +10,18 @@ namespace Asgn
     /// </summary>
     class FrequencyTable
     {
-        public Dictionary<byte[], double> Freq = new Dictionary<byte[], double>(
-            new ByteArrayComparer()
-        );
+        public Dictionary<string, double> Freq = new Dictionary<string, double>();
 
         /// <summary>
         /// Generate frequency information from raw binary data.
         /// The symbols yielded are single octets.
         /// </summary>
-        public void Generate(byte[] input)
+        public void Generate(string input)
         {
             Freq.Clear();
             for (int i = 0; i < input.Length; i++)
             {
-                byte[] symbol = new byte[] { input[i] };
-                if (Freq.ContainsKey(symbol))
-                    Freq[symbol] += 1.0;
-                else
-                    Freq[symbol] = 1.0;
-            }
-        }
-
-        /// <summary>
-        /// Generate frequency information from a UTF-8 string.
-        /// The symbols yielded are sequences of octets that form Unicode code points.
-        /// </summary>
-        public void GenerateUTF8(byte[] input)
-        {
-            Freq.Clear();
-            if (!UnicodeUtils.ValidateUTF8(input))
-                return;
-            int i = 0; // index in input
-            while (i < input.Length)
-            {
-                byte[] symbol = UnicodeUtils.StepUTF8(input, ref i);
+                string symbol = input[i].ToString();
                 if (Freq.ContainsKey(symbol))
                     Freq[symbol] += 1.0;
                 else
@@ -67,14 +45,18 @@ namespace Asgn
                     continue;
                 try
                 {
-                    byte[] symbol;
+                    string symbol;
                     frequency = double.Parse(tokens[tokens.Length - 1]);
                     if (text == "\\n")
-                        symbol = new byte[] { 10 };
+                        symbol = "\n";
                     else if (text == "\\r")
-                        symbol = new byte[] { 13 };
+                        symbol = "\r";
+                    else if (text == "\\t")
+                        symbol = "\t";
+                    else if (text == "\\\\")
+                        symbol = "\\";
                     else
-                        symbol = Encoding.UTF8.GetBytes(text);
+                        symbol = text;
                     if (Freq.ContainsKey(symbol))
                         Freq[symbol] += frequency;
                     else
@@ -94,14 +76,18 @@ namespace Asgn
         public string ToUIString()
         {
             StringBuilder output = new StringBuilder();
-            foreach (byte[] symbol in Freq.Keys)
+            foreach (string symbol in Freq.Keys)
             {
-                if (symbol.Length == 1 && symbol[0] == 10)
+                if (symbol == "\n")
                     output.Append("\\n");
-                else if (symbol.Length == 1 && symbol[0] == 13)
+                else if (symbol == "\r")
                     output.Append("\\r");
+                else if (symbol == "\t")
+                    output.Append("\\t");
+                else if (symbol == "\\")
+                    output.Append("\\\\");
                 else
-                    output.Append(Encoding.UTF8.GetString(symbol));
+                    output.Append(symbol);
                 output.Append(":");
                 output.Append(Freq[symbol].ToString());
                 output.Append("\n");

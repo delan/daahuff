@@ -55,7 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="UnicodeUtils.cs" />
+    <Compile Include="DAABitArray.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -65,8 +65,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Base64.cs" />
-    <Compile Include="BitArray.cs" />
-    <Compile Include="ByteArrayComparer.cs" />
     <Compile Include="FrequencyTable.cs" />
     <Compile Include="HuffmanTranscoder.cs" />
     <Compile Include="HuffmanTree.cs" />

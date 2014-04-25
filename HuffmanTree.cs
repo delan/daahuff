@@ -11,8 +11,8 @@ namespace Asgn
     class HuffmanTreeNode : IComparable<HuffmanTreeNode>
     {
         public double Frequency;
-        public byte[] Symbol;
-        public BitArray Code;
+        public string Symbol;
+        public DAABitArray Code;
         public HuffmanTreeNode Parent, Left, Right;
 
         public int CompareTo(HuffmanTreeNode other)
@@ -67,13 +67,13 @@ namespace Asgn
             foreach (HuffmanTreeNode leaf in Leaves)
             {
                 HuffmanTreeNode node = leaf;
-                leaf.Code = new BitArray();
+                leaf.Code = new DAABitArray();
                 while (node.Parent != null)
                 {
                     if (node == node.Parent.Left)
-                        leaf.Code.Add(false);
+                        leaf.Code.Append(false);
                     if (node == node.Parent.Right)
-                        leaf.Code.Add(true);
+                        leaf.Code.Append(true);
                     node = node.Parent;
                 }
                 leaf.Code.Reverse();

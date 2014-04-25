@@ -31,15 +31,10 @@ namespace Asgn
             table.LoadUIString(txtFreqTbl.Text);
             if (table.Freq.Count > 0 && txtPlain.Text.Length > 0)
             {
-                byte[] input = Encoding.UTF8.GetBytes(txtPlain.Text);
                 try
                 {
-                    byte[] output = HuffmanTranscoder.DeflateUTF8(input, table);
-                    txtCompressed.Text = Base64.Encode(output, Base64.Hannes);
-                }
-                catch (KeyNotFoundException exception)
-                {
-                    MessageBox.Show("Frequency table missing entry: " + exception.Message);
+                    DAABitArray output = HuffmanTranscoder.Deflate(txtPlain.Text, table);
+                    txtCompressed.Text = Base64.Encode(output);
                 }
                 catch (Exception exception)
                 {
@@ -58,11 +53,10 @@ namespace Asgn
             table.LoadUIString(txtFreqTbl.Text);
             if (table.Freq.Count > 0 && txtCompressed.Text.Length > 0)
             {
-                byte[] input = Base64.Decode(txtCompressed.Text, Base64.Hannes);
                 try
                 {
-                    byte[] output = HuffmanTranscoder.Inflate(input, table);
-                    txtPlain.Text = Encoding.UTF8.GetString(output);
+                    DAABitArray input = Base64.Decode(txtCompressed.Text);
+                    txtPlain.Text = HuffmanTranscoder.Inflate(input, table);
                 }
                 catch (Exception exception)
                 {
@@ -78,8 +72,7 @@ namespace Asgn
         private void btnFreq_Click(object sender, RoutedEventArgs e)
         {
             FrequencyTable table = new FrequencyTable();
-            byte[] input = Encoding.UTF8.GetBytes(txtPlain.Text);
-            table.GenerateUTF8(input);
+            table.Generate(txtPlain.Text);
             txtFreqTbl.Text = table.ToUIString();
         }
     }
