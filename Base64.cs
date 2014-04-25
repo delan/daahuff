@@ -24,7 +24,6 @@ namespace Asgn
         /// Transforms a sequence of bits into a Base64 string.
         /// </summary>
         /// <param name="input">The bits to transform.</param>
-        /// <param name="style">The flavour of Base64 encoding to use.</param>
         /// <returns>A string with the Base64 representation of the input.</returns>
         public static string Encode(DAABitArray input)
         {
