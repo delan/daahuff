@@ -57,7 +57,7 @@ namespace Asgn
         public void LoadUIString(string input)
         {
             Freq.Clear();
-            string[] lines = input.Split(new char[] { '\n', '\r' });
+            string[] lines = input.Split('\n');
             foreach (string line in lines)
             {
                 double frequency = double.NaN;
@@ -67,8 +67,14 @@ namespace Asgn
                     continue;
                 try
                 {
+                    byte[] symbol;
                     frequency = double.Parse(tokens[tokens.Length - 1]);
-                    byte[] symbol = Encoding.UTF8.GetBytes(text);
+                    if (text == "\\n")
+                        symbol = new byte[] { 10 };
+                    else if (text == "\\r")
+                        symbol = new byte[] { 13 };
+                    else
+                        symbol = Encoding.UTF8.GetBytes(text);
                     if (Freq.ContainsKey(symbol))
                         Freq[symbol] += frequency;
                     else
@@ -90,7 +96,12 @@ namespace Asgn
             StringBuilder output = new StringBuilder();
             foreach (byte[] symbol in Freq.Keys)
             {
-                output.Append(Encoding.UTF8.GetString(symbol));
+                if (symbol.Length == 1 && symbol[0] == 10)
+                    output.Append("\\n");
+                else if (symbol.Length == 1 && symbol[0] == 13)
+                    output.Append("\\r");
+                else
+                    output.Append(Encoding.UTF8.GetString(symbol));
                 output.Append(":");
                 output.Append(Freq[symbol].ToString());
                 output.Append("\n");
