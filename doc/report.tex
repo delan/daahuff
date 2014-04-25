@@ -16,7 +16,7 @@
 \lstset{basicstyle=\ttfamily, basewidth=0.5em}
 
 \title{Design and Analysis of Algorithms 300\\Huffman assignment}
-\date{April 25, 2014}
+\date{April 26, 2014}
 \author{Delan Azabani}
 
 \begin{document}
@@ -28,37 +28,37 @@
 \begin{itemize}
 	\item Generating optimal frequency tables
 	\item Compression with symbols of a single \texttt{char}
-	\item Text interpretation from and to base 64
+	\item Text interpretation from and to a radix 64 encoding
 	\item Decompression with symbols of arbitrary length
-	\item Appropriate exceptions thrown and handled
 \end{itemize}
 
-\section{Known defects}
+\section{Assumptions, defects and limitations}
 
-When generating a Huffman tree from a single symbol, the leaf node will become
-the head and only node, and thus the symbol's Huffman code will be empty. I
-have checked and disallowed compression and decompression with a frequency
-table having one symbol.
+When generating a Huffman tree from a frequency table with a single symbol, the
+leaf node will become the head and only node. With no movements required in
+tree traversal, the only symbol's Huffman code will be empty. Compression
+yields nothing, and decompression results in following a null reference.
 
-Decompression may yield a string that is a few characters too long or too
-short.
+Instead of implementing a special case for this, for example by using a false
+Huffman tree with a head and one child, I have checked for and disallowed
+compression and decompression with a frequency table having just one symbol.
 
-\section{Handling newlines and tabs}
+Decompression may yield a string that is up to five characters too long, with
+added garbage on the end. This is due to the nature of radix 64 text encoding,
+which requires the input to be padded with zero bits up to a multiple of six
+bits.
 
 To resolve ambiguities with the frequency table format, the line feed, carriage
-return, horizontal tab and backslash characters are represented in the table by
-the C-style escape sequences
-\texttt{\textbackslash n},
-\texttt{\textbackslash r},
-\texttt{\textbackslash t} and
-\texttt{\textbackslash\textbackslash} respectively.
-Space and colon are also supported.
+return and backslash are represented in the table by the C-style escape
+sequences \texttt{\textbackslash n}, \texttt{\textbackslash r} and
+\texttt{\textbackslash\textbackslash} respectively. However, I did not
+implement a way to allow for symbols containing these characters
+\emph{among} other characters.
 
 \section{Build information}
 
-This implementation is based on \texttt{DAA300Asgn\_Base.zip}. While it was
-developed using Visual C\# 2013, it compiles and runs correctly on Visual C\#
-2010 without changes. To run this assignment, open \texttt{Asgn.sln} and hit F5
-within Visual Studio.
+This assignment was developed using Visual C\# 2013, but it compiles and
+runs correctly on Visual C\# 2010 without any changes. To run it, open
+\texttt{Asgn.sln} and hit F5.
 
 \end{document}
