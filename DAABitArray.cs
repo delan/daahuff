@@ -185,5 +185,6 @@ namespace Asgn
 
             return iBitSetVal;
         }
+
     }
 }
