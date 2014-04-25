@@ -41,6 +41,10 @@ namespace Asgn
                 {
                     MessageBox.Show("Frequency table missing entry: " + exception.Message);
                 }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                }
             }
             else
             {
@@ -55,8 +59,15 @@ namespace Asgn
             if (table.Freq.Count > 0 && txtCompressed.Text.Length > 0)
             {
                 byte[] input = Base64.Decode(txtCompressed.Text, Base64.Hannes);
-                byte[] output = HuffmanTranscoder.Inflate(input, table);
-                txtPlain.Text = Encoding.UTF8.GetString(output);
+                try
+                {
+                    byte[] output = HuffmanTranscoder.Inflate(input, table);
+                    txtPlain.Text = Encoding.UTF8.GetString(output);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                }
             }
             else
             {

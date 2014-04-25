@@ -14,6 +14,8 @@ namespace Asgn
         {
             BitArray output = new BitArray();
             HuffmanTree tree = new HuffmanTree(table);
+            if (tree.Leaves.Count < 2)
+                throw new ArgumentException("Cannot deflate data with only one symbol");
             for (int i = 0; i < input.Length; i++)
             {
                 byte[] symbol = new byte[] { input[i] };
@@ -36,6 +38,8 @@ namespace Asgn
         {
             BitArray output = new BitArray();
             HuffmanTree tree = new HuffmanTree(table);
+            if (tree.Leaves.Count < 2)
+                throw new ArgumentException("Cannot deflate data with only one symbol");
             if (!UnicodeUtils.ValidateUTF8(input))
                 throw new ArgumentException();
             int i = 0; // index in input
@@ -63,22 +67,23 @@ namespace Asgn
             List<byte> output = new List<byte>();
             HuffmanTree tree = new HuffmanTree(table);
             HuffmanTreeNode node = tree.Head;
+            if (tree.Leaves.Count < 2)
+                throw new ArgumentException("Cannot inflate data with only one symbol");
             for (int i = 0; i < bits.Length; i++)
             {
-                if (bits[i] == false && node.Left != null)
+                if (node.Symbol != null)
                 {
-                    node = node.Left;
+                    foreach (byte octet in node.Symbol)
+                        output.Add(octet);
+                    node = tree.Head;
                 }
-                else if (bits[i] == true && node.Right != null)
+                if (bits[i])
                 {
                     node = node.Right;
                 }
                 else
                 {
-                    foreach (byte octet in node.Symbol)
-                        output.Add(octet);
-                    node = tree.Head;
-                    i--;
+                    node = node.Left;
                 }
             }
             return output.ToArray();
