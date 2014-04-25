@@ -13,8 +13,8 @@ namespace Asgn
         public Dictionary<string, double> Freq = new Dictionary<string, double>();
 
         /// <summary>
-        /// Generate frequency information from raw binary data.
-        /// The symbols yielded are single octets.
+        /// Generate frequency information from a string.
+        /// The symbols yielded are strings containing single characters.
         /// </summary>
         public void Generate(string input)
         {
@@ -71,7 +71,6 @@ namespace Asgn
 
         /// <summary>
         /// Returns a string representation suitable for UI use.
-        /// Assumes that each symbol is a UTF-8 octet sequence.
         /// </summary>
         public string ToUIString()
         {
